@@ -1,0 +1,19 @@
+{
+  "name": "@workspace/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@workspace/control": "*",
+    "@workspace/core": "*",
+    "@workspace/protocol": "*",
+    "@workspace/registry": "*",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.12"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "run_root": "runs",
+  "allowed_project_roots": [
+    "C:/Users/Administrator/WorkBuddy/2026-10-14-14-06-16"
+  ],
+  "process_timeout_seconds": 1200,
+  "retry": {
+    "attempts": 3,
+    "base_seconds": 2,
+    "max_seconds": 30,
+    "jitter_seconds": 0.5
+  },
+  "quality": {
+    "review_score": 80,
+    "max_repair_cycles": 2
+  },
+  "tools": {
+    "claude": {
+      "command": "C:/Users/Administrator/.local/bin/claude.exe",
+      "analysis_model": "opus",
+      "analysis_effort": "high",
+      "design_model": "opus",
+      "design_effort": "high",
+      "ui_model": "sonnet",
+      "env": {}
+    },
+    "codex": {
+      "command": "C:/Users/Administrator/AppData/Local/OpenAI/Codex/bin/bffc5354119c8421/codex.exe",
+      "model": "gpt-5.5",
+      "reasoning_effort": "high",
+      "env": {
+        "HTTP_PROXY": "http://127.0.0.1:7890",
+        "HTTPS_PROXY": "http://127.0.0.1:7890",
+        "ALL_PROXY": "http://127.0.0.1:7890",
+        "NO_PROXY": "127.0.0.1,localhost"
+      },
+      "notes": "优先桌面内置 0.154.0-alpha.6.2；不要使用与当前 service_tier/model catalog 不兼容的 npm 0.130.0。若出现 os error 231，请重启 Codex 桌面端后重试。"
+    },
+    "windows_mcp": {
+      "mcp_config": "C:/Users/Administrator/.workbuddy/mcp.json",
+      "preferred_client": "claude",
+      "notes": "Claude Code 已实测可调用；Codex 本机 code-mode host 当前可能出现 Windows 管道 231。"
+    },
+    "doubao": {
+      "mode": "handoff",
+      "ui_client": "claude",
+      "application": "豆包"
+    },
+    "workbuddy": {
+      "mode": "handoff",
+      "ui_client": "claude",
+      "application": "WorkBuddy"
+    }
+  }
+}

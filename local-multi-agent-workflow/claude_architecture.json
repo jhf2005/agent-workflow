@@ -1,0 +1,98 @@
+{
+  "designer": {
+    "selected": "Claude Code (Claude Opus 4.7)",
+    "reason": "生成前端设计提示词本质是需求综合与分析任务，与 Claude Code 的分析、推理和总结职责直接匹配；Claude Code 2.1.141 可非交互运行并输出结构化 JSON。Codex 专注代码生成；WorkBuddy 保留独立审阅角色；豆包无 CLI；Windows-MCP 仅承担桌面桥接。",
+    "rubric": [
+      "完整性：覆盖目标、受众、平台、视觉风格、交互状态与边界情况",
+      "可执行性：Codex 可直接据此编码，无歧义",
+      "约束一致：反映 JSON 契约、标准库优先、幂等和 GUI 默认禁用",
+      "验收标准：含具体可测的接受准则",
+      "非目标明确：列出 non-goals 防止范围蔓延",
+      "可复现性：输出确定且内容哈希稳定，支持幂等重跑"
+    ]
+  },
+  "steps": [
+    {
+      "name": "intake_requirements",
+      "actor": "Orchestrator",
+      "inputs": ["user_request"],
+      "outputs": ["task_spec.json"],
+      "gate": "task_spec.json 通过 schema 校验且必填字段齐全"
+    },
+    {
+      "name": "generate_design_prompt",
+      "actor": "Claude Code",
+      "inputs": ["task_spec.json", "frontend_prompt_template"],
+      "outputs": ["design_prompt.md", "design_prompt.json"],
+      "gate": "提示词通过设计 rubric 且达到阈值"
+    },
+    {
+      "name": "generate_frontend_code",
+      "actor": "Codex",
+      "inputs": ["design_prompt.md", "code_contract.json"],
+      "outputs": ["source/", "build_artifacts/"],
+      "gate": "构建、测试和 code_contract 校验通过"
+    },
+    {
+      "name": "ui_bridge_handoff",
+      "actor": "Windows-MCP",
+      "inputs": ["design_prompt.md", "summary_report.json"],
+      "outputs": ["bridge_manifest.json"],
+      "gate": "桥接目标已解析；未加 --allow-ui 时 GUI 路由被阻断"
+    },
+    {
+      "name": "generate_ppt",
+      "actor": "豆包 Desktop",
+      "inputs": ["bridge_manifest.json", "design_prompt.md"],
+      "outputs": ["slides.pptx"],
+      "gate": "需显式 --allow-ui；PPTX 文件结构和最小页数校验通过"
+    },
+    {
+      "name": "analyze_and_summarize",
+      "actor": "Claude Code",
+      "inputs": ["source/", "code_contract.json", "bridge_manifest.json"],
+      "outputs": ["summary_report.json"],
+      "gate": "报告含指标、决策、风险且 JSON schema 有效"
+    },
+    {
+      "name": "review_and_publish",
+      "actor": "WorkBuddy",
+      "inputs": ["source/", "summary_report.json", "slides.pptx"],
+      "outputs": ["review_report.json", "paper.md"],
+      "gate": "审阅评分达到阈值且上游所有 gate 为绿色"
+    },
+    {
+      "name": "finalize_manifest",
+      "actor": "Orchestrator",
+      "inputs": ["全部步骤输出"],
+      "outputs": ["manifest.json", "state.json", "events.jsonl"],
+      "gate": "清单完整、产物已哈希、状态原子提交"
+    }
+  ],
+  "contracts": [
+    "task_spec.json：规范化任务输入，含目标、受众、平台、风格、前端/PPT/写作开关和验收标准",
+    "design_prompt.json：前端视觉总监的结构化输出，含设计令牌、版式、动效、无障碍和 Codex 最终提示词",
+    "code_result.json：Codex 代码执行结果，含变更文件、验证命令、状态和警告",
+    "bridge_manifest.json：Windows-MCP 桥接目标、目标应用、产物路径和安全约束",
+    "review_report.json：WorkBuddy 审阅结果，含评分、阻断问题、建议和是否通过",
+    "manifest.json：最终交付清单，含哈希、状态、时间戳和质量闸门结果"
+  ],
+  "reliability": [
+    "可恢复状态机：每步状态持久化，崩溃后从断点恢复",
+    "幂等：步骤 ID、规范化输入和配置哈希去重，成功步骤不重复执行",
+    "指数退避：CLI/UI 调用失败按 2^n 加抖动重试，限制最大次数和单步超时",
+    "质量闸门：契约、文件、构建、测试和审阅逐级阻断",
+    "GUI 自动化默认禁用：仅显式 --allow-ui 才能控制豆包或 WorkBuddy",
+    "原子写入：临时文件加 replace，避免半成品污染状态",
+    "CLI 版本固定：优先 Codex 桌面内置 0.154.0-alpha.6.2，规避 npm 全局 0.130.0 的 service_tier 不兼容"
+  ],
+  "implementation": [
+    "Python 3 标准库：argparse、json、hashlib、subprocess、time、pathlib、zipfile、unittest",
+    "Claude Code 使用 -p、--output-format json、--json-schema、--model opus 非交互调用",
+    "Codex 使用 exec、--skip-git-repo-check、--sandbox workspace-write 和桌面内置 CLI",
+    "Windows-MCP 由 Codex 作为 MCP host 调用，豆包与 WorkBuddy GUI 仅作为可选适配器",
+    "无 WorkBuddy CLI/API 时默认生成 handoff 审阅包；在本会话或显式 GUI 模式完成审阅",
+    "每次运行创建独立 runs/<run_id>/ 目录，保存状态、日志、原始输出和最终清单"
+  ],
+  "frontend_prompt_template": "先明确目的、受众、平台和差异化记忆点；选择一个鲜明且与业务匹配的视觉方向；定义字体、色板、栅格、间距、圆角、阴影与动效令牌；逐页描述信息架构、关键组件、交互状态、响应式规则和无障碍要求；明确技术约束与不可使用的通用 AI 套路（紫色渐变、Inter/Arial、千篇一律卡片网格）；最后生成一段 Codex 可直接执行的完整开发提示词，并附可测试的验收清单。"
+}

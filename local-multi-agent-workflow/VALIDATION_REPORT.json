@@ -1,0 +1,28 @@
+{
+  "status": "passed_with_environment_notes",
+  "validated_at": "2026-10-14T14:41:07+08:00",
+  "checks": {
+    "python_compile": "passed",
+    "unit_tests": {
+      "passed": 8,
+      "failed": 0
+    },
+    "doctor": "passed",
+    "dry_run": "passed",
+    "resume": "passed",
+    "pptx_validation": {
+      "passed": true,
+      "slides": 10
+    },
+    "windows_mcp_observation": {
+      "passed": true,
+      "workbuddy_found": true,
+      "doubao_found_on_desktop_1": false
+    }
+  },
+  "environment_notes": [
+    "Codex desktop CLI networking works when 127.0.0.1:7890 proxy variables are explicit.",
+    "Codex local code-mode host currently reports Windows os error 231; restart Codex Desktop before real file-editing runs.",
+    "Doubao was not visible on desktop 1; start/login or check desktop 2 before enabling windows_mcp mode."
+  ]
+}

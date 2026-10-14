@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "passed": {"type": "boolean"},
+    "score": {"type": "integer"},
+    "summary": {"type": "string"},
+    "blockers": {"type": "array", "items": {"type": "string"}},
+    "important_findings": {"type": "array", "items": {"type": "string"}},
+    "suggestions": {"type": "array", "items": {"type": "string"}},
+    "writing_output": {"type": "string"}
+  },
+  "required": ["passed", "score", "summary", "blockers", "important_findings", "suggestions", "writing_output"],
+  "additionalProperties": false
+}

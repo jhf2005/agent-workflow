@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.tsbuildinfo
+coverage/
+runs/
+.env
+.env.*
+*.log
+
+# Tauri / Rust
+src-tauri/target/
+src-tauri/gen/
+
+# control-plane local state
+.agent-workspace/

@@ -1,0 +1,37 @@
+{
+  "task_id": "demo-multi-agent-project",
+  "goal": "开发一个具有高质量前端并可汇报的本地示例项目",
+  "context": "演示 Claude Code 分析、Claude Opus 视觉提示词、Codex 编码、豆包 PPT 和 WorkBuddy 审阅的完整流水线。",
+  "target_dir": "generated_project",
+  "audience": ["项目负责人", "研发团队", "业务评审人"],
+  "constraints": [
+    "所有运行产物留在当前工作区",
+    "未经 --allow-ui 不得控制桌面应用",
+    "不得覆盖已有文件"
+  ],
+  "acceptance_criteria": [
+    "结构化分析 JSON 通过 schema 校验",
+    "前端设计提示词明确且可直接交给 Codex",
+    "代码构建和测试通过",
+    "PPTX 文件结构有效且不少于 10 页",
+    "WorkBuddy 审阅分数不低于 80"
+  ],
+  "frontend": {
+    "enabled": true,
+    "framework": "Vue 3",
+    "visual_tone": "编辑感、克制、具有记忆点"
+  },
+  "code": {
+    "enabled": true
+  },
+  "ppt": {
+    "enabled": true,
+    "slides": 10,
+    "title": "本地多 AI 智能体协作工作流"
+  },
+  "writing": {
+    "enabled": true,
+    "type": "article",
+    "title": "从单点 AI 到本地多智能体流水线"
+  }
+}

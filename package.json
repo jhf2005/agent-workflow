@@ -1,0 +1,24 @@
+{
+  "name": "agent-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p apps/desktop/tsconfig.json",
+    "typecheck:packages": "tsc --noEmit",
+    "dev:server": "tsx packages/server/src/cli.ts",
+    "dev:desktop": "npm run dev -w @workspace/desktop"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}

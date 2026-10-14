@@ -1,0 +1,8 @@
+{
+  "id": "claude-codex-ppt-review",
+  "name": "Claude → Codex → Doubao → WorkBuddy",
+  "version": "1.0.0",
+  "description": "The original analysis → design → code → ppt → review pipeline, ported as a loadable template.",
+  "steps": ["analysis", "frontend_design", "code", "ppt", "review"],
+  "entrypoint": "legacy"
+}
